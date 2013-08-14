@@ -28,6 +28,9 @@ class L4gettextServiceProvider extends ServiceProvider {
         // include routes
         include_once __DIR__ . '/../../routes.php';
 
+        // include functions
+        include_once __DIR__ . '/Functions.php';
+
         // make sure the class is initialized
         $gt = new L4gettext();
     }
