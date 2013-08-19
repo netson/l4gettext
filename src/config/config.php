@@ -8,7 +8,7 @@ return array(
      * set the preferred default locale according to [2letterlanguagecode_2LETTERCOUNTRYCODE]
      * the default is [en_US]
      */
-    'default_locale' => 'en_US',
+    'default_locale'   => 'en_US',
     /**
      * set preferred default encoding
      * the default is [utf8]
@@ -18,7 +18,7 @@ return array(
      * determines the text domain; this should be unique for each application
      * the default is [messages]
      */
-    'textdomain'     => 'messages',
+    'textdomain'       => 'messages',
     /**
      * the path to your mo files
      * this should be relative to the laravel app/ dir
@@ -26,17 +26,17 @@ return array(
      * l4gettext will automatically attempt to create the proper directory structure
      * the default is [locale]
      */
-    'path_to_mo'     => 'locale',
+    'path_to_mo'       => 'locale',
     /**
      * compiler settings
      */
-    'compiler'       => array(
+    'compiler'         => array(
         /**
          * set the folder to scan for blade templates
          * the path is relative to the /app folder and should not contain any leading ot trailing slashes
          * the default is [views]
          */
-        'input_folder' => 'views',
+        'input_folder'  => 'views',
         /**
          * set the folder where the compiled templates are stored
          * the path is relative to the /app/storage folder and should not contain and leading or trailing spaces
@@ -48,12 +48,22 @@ return array(
          * starting from the input_folder directory
          * the default is [10]
          */
-        'levels' => 10,
+        'levels'        => 10,
     ),
     /**
      * xgettext configuration
      */
-    'xgettext'       => array(
+    'xgettext'         => array(
+        /**
+         * In case the path to your xgettext binary is not in your PATH, you can use the following
+         * config option to manually set it. This path will then be added to the xgettext command.
+         * If you leave this empty, it will be assumed that the xgettext binary is in the PATH of the OS user executing the command
+         * Example:  /usr/bin
+         *
+         * Please do NOT add a trailing slash
+         * The default value is []
+         */
+        'binary_path'  => "",
         /**
          * sets the script language for the xgettext command
          * you should never have to change this option

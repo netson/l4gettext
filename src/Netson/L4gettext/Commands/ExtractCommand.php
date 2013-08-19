@@ -84,6 +84,11 @@ class ExtractCommand extends Command {
         $this->comment("  [$i] files found in input folder [$input_folder]");
 
         /**
+         * Fetch path to xgettext binary
+         */
+        $path = ($this->option('binary_path') == "") ? null : $this->option('binary_path') . DIRECTORY_SEPARATOR;
+
+        /**
          * set base xgettext command and arguments array
          */
         $xgettext_command = "xgettext";
@@ -193,7 +198,12 @@ class ExtractCommand extends Command {
          * create l4shell command and execute
          * the setAllowedCharacters method is used to prevent the *-sign from being escaped
          */
-        $command = L4shell::setCommand($xgettext_command)->setArguments($xgettext_arguments)->sendToDevNull()->setAllowedCharacters(array("*"));
+        $command = L4shell::setCommand($xgettext_command)
+                ->setExecutablePath($path)
+                ->setArguments($xgettext_arguments)
+                ->sendToDevNull()
+                ->setAllowedCharacters(array("*"));
+
         $command->execute();
 
         $this->info("  POT file located in [$xgettext_output_file]");
@@ -223,6 +233,7 @@ class ExtractCommand extends Command {
          * set defaults
          */
         $defaults = array(
+            'binary_path'      => Config::get("l4gettext::config.xgettext.binary_path"),
             'language'         => Config::get("l4gettext::config.xgettext.language"),
             'comments'         => Config::get("l4gettext::config.xgettext.comments"),
             'force_po'         => Config::get("l4gettext::config.xgettext.force_po"),
@@ -240,6 +251,7 @@ class ExtractCommand extends Command {
          * return the options array
          */
         return array(
+            array('binary_path', 'p', InputOption::VALUE_REQUIRED, 'The path to your xgettext binary, without a trailing slash', $defaults['binary_path']),
             array('language', 'l', InputOption::VALUE_REQUIRED, 'The script/programming language of the files to be scanned', $defaults['language']),
             array('comments', 'c', InputOption::VALUE_REQUIRED, 'The docbloc text to scan for', $defaults['comments']),
             array('force_po', 'f', InputOption::VALUE_REQUIRED, 'Forces the creation of a .pot file regardless of any translation strings found (bool)', $defaults['force_po']),

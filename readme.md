@@ -82,7 +82,26 @@ Now, make sure you set the proper **copyright holder**, **package name**, **pack
 
 ### Important note ###
 
-This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a "The given command could not be found (exit status 127)" error message. To fix this, execute the following command on the CLI (assuming www-data is your webserver user):
+This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a *"The given command could not be found (exit status 127)"* error message. To fix this, you have two options:
+
+* Add the path to your xgettext binary to the config file (assuming /usr/bin is the location of your xgettext binary):
+
+```php
+<?php
+	return array(
+		// ...
+		'xgettext' => array(
+			'binary_path' => "/usr/bin",
+			// ...
+```
+
+**Make sure** you publish the config file first:
+
+``` $ php artisan config:publish netson/l4gettext ```
+
+Then, edit the local config file in ``` app/config/packages/netson/l4gettext/config.php ```
+
+* **OR**, Execute the following command on the CLI (assuming www-data is your webserver user):
 
 ```
 $ su www-data
