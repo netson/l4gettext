@@ -56,7 +56,7 @@ Aside from some of the laravel 4 components, there are only logical dependencies
 
 ``` $ php composer.phar update ```
 
-* add the l4gettext service provider to the laravel app/config/app.php file, in array key 'provider': 'Netson\L4gettext\L4gettextServiceProvider'
+* add the l4gettext service provider **AND** the L4shell service provider to the laravel app/config/app.php file, in array key 'provider':
 
 ```php
 <?php
@@ -66,6 +66,7 @@ return array(
         ..
 	    'providers' => array(
                 ..
+				'Netson\L4shell\L4shellServiceProvider',
                 'Netson\L4gettext\L4gettextServiceProvider',
         ),
         ..
@@ -78,6 +79,15 @@ Before changing any of the configuration options, be sure to publish the package
 ``` $ php artisan config:publish netson/l4gettext ```
 
 Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext ```
+
+### Important note ###
+
+This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a "The given command could not be found (exit status 127)" error message. To fix this, execute the following command on the CLI (assuming www-data is your webserver user):
+
+```
+$ su www-data
+$ echo 'export PATH=$PATH:/path/to/your/xgettext/folder' >> ~/.bashrc
+```
 
 You are now good to go!
 
