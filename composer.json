@@ -5,7 +5,7 @@
     "type": "library",
     "homepage": "https://github.com/netson/l4gettext",
     "keywords": ["laravel", "gettext", "netson", "laravel4"],
-    "version": "1.0.2",
+    "version": "1.1.0",
     "authors": [
         {
             "name": "Rinck Sonnenberg",
