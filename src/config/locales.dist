@@ -1,0 +1,15 @@
+<?php
+/**
+ * if you wish to alter this configuration file, make sure you issue the publish command and change the published version:
+ * # php artisan config:publish netson/l4gettext
+ */
+/**
+ * contains a list of valid encodings
+ * even though php's setlocale function allows you to check if the given locale/encoding is valid,
+ * this provides you with the opportunity to limit encodings not to the installed ones, but
+ * ones that you actually support in your application
+ *
+ * this file can be auto-generated using the following artisan command, which will also automatically publish the config file:
+ * # php artisan l4gettext:fetch
+ */
+

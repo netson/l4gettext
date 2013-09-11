@@ -118,6 +118,7 @@ return array(
         /**
          * specify the keywords used to scan the source files for strings
          * you can add your own shorthand/alternative keywords here which will then be scanned by xgettext
+         * make sure the corresponding php function exists when you do
          * the defaults are [_, gettext, dgettext:2, dcgettext:2, ngettext:1,2, dngettext:2,3, dcngettext:2,3, _n:1,2]
          */
         'keywords'         => array(

@@ -78,6 +78,10 @@ Before changing any of the configuration options, be sure to publish the package
 
 ``` $ php artisan config:publish netson/l4gettext ```
 
+**Alternatively**, you can use the l4gettext:fetch command to auto generate the config files with only the locales/encodings installed on your system; this will automatically publish the config files if it hasn't been done already:
+
+``` $ php artisan l4gettext:fetch ```
+
 Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext ```
 
 ### Important note ###
@@ -118,6 +122,7 @@ There are 3 artisan commands for this package:
 * **l4gettext:compile**: compiles all template files to a specific folder (not the default cache folder)
 * **l4gettext:extract**: extracts all the language strings from the compiled templates
 * **l4gettext:list**: lists the locales/encodings supported by the application (not the system locales) and prints the default settings
+* **l4gettext:fetch**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS; in case the config files have not been published yet, this command will do so first
 
 These commands use the options as set in the config file, but most can be overwritten at runtime by providing the appropriate parameters on the CLI. Check out the help for these commands for more info:
 
@@ -125,7 +130,7 @@ These commands use the options as set in the config file, but most can be overwr
 
 ``` $ php artisan l4gettext:extract --help ```
 
-**NOTE**: *When using the default settings, running the l4gettext:extract command without calling the l4gettext:compile command first will issue a warning and ask if the compile command should be executed first.*
+**NOTE**: *When using the default settings, running the l4gettext:extract command without calling the l4gettext:compile command first will issue a warning and you the compile command should be executed first.*
 
 ## Supported locales
 

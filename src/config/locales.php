@@ -10,6 +10,9 @@
  * even though php's setlocale function allows you to check if the given locale is valid,
  * this provides you with the opportunity to limit locales not to the installed ones, but
  * ones that you actually support in your application
+ *
+ * this file can be auto-generated using the following artisan command, which will also automatically publish the config file:
+ * # php artisan l4gettext:fetch
  */
 return array(
     "list" => array(

@@ -29,6 +29,7 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
         File::shouldReceive('glob')->once()->andReturn(array("test.php"));
 
         L4shell::shouldReceive('setCommand')->once()->andReturn(m::self());
+        L4shell::shouldReceive('setExecutablePath')->once()->andReturn(m::self());
         L4shell::shouldReceive('setArguments')->once()->andReturn(m::self());
         L4shell::shouldReceive('sendToDevNull')->once()->andReturn(m::self());
         L4shell::shouldReceive('setAllowedCharacters')->once()->with(array("*"))->andReturn(m::self());

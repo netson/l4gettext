@@ -1,4 +1,5 @@
-<?php namespace Netson\L4gettext;
+<?php
+namespace Netson\L4gettext;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
@@ -18,7 +19,7 @@ class L4gettextServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function boot()
+    public function boot ()
     {
         $this->package('netson/l4gettext');
 
@@ -33,6 +34,7 @@ class L4gettextServiceProvider extends ServiceProvider {
 
         // make sure the class is initialized
         $gt = new L4gettext();
+
     }
 
     /**
@@ -40,7 +42,7 @@ class L4gettextServiceProvider extends ServiceProvider {
      *
      * @return void
      */
-    public function register()
+    public function register ()
     {
         // register l4gettext and alias
         $this->registerL4gettext();
@@ -52,6 +54,8 @@ class L4gettextServiceProvider extends ServiceProvider {
         $this->registerCompileCommand();
         $this->registerExtractCommand();
         $this->registerListCommand();
+        $this->registerFetchCommand();
+
     }
 
     public function registerL4gettext ()
@@ -66,6 +70,7 @@ class L4gettextServiceProvider extends ServiceProvider {
                     $loader = AliasLoader::getInstance();
                     $loader->alias('L4gettext', 'Netson\L4gettext\Facades\L4gettext');
                 });
+
     }
 
     public function registerL4gettextBladeCompiler ()
@@ -80,6 +85,7 @@ class L4gettextServiceProvider extends ServiceProvider {
                     $loader = AliasLoader::getInstance();
                     $loader->alias('BladeCompiler', 'Netson\L4gettext\Facades\BladeCompiler');
                 });
+
     }
 
     public function registerCompileCommand ()
@@ -89,6 +95,7 @@ class L4gettextServiceProvider extends ServiceProvider {
                     return new Commands\CompileCommand();
                 });
         $this->commands('l4gettext.compile');
+
     }
 
     public function registerExtractCommand ()
@@ -98,6 +105,7 @@ class L4gettextServiceProvider extends ServiceProvider {
                     return new Commands\ExtractCommand();
                 });
         $this->commands('l4gettext.extract');
+
     }
 
     public function registerListCommand ()
@@ -107,6 +115,17 @@ class L4gettextServiceProvider extends ServiceProvider {
                     return new Commands\ListCommand();
                 });
         $this->commands('l4gettext.list');
+
+    }
+
+    public function registerFetchCommand ()
+    {
+        // add fetch command to artisan
+        $this->app['l4gettext.fetch'] = $this->app->share(function($app) {
+                    return new Commands\FetchCommand();
+                });
+        $this->commands('l4gettext.fetch');
+
     }
 
     /**
@@ -114,9 +133,10 @@ class L4gettextServiceProvider extends ServiceProvider {
      *
      * @return array
      */
-    public function provides()
+    public function provides ()
     {
         return array("L4gettext");
+
     }
 
 }

@@ -9,8 +9,8 @@
  * this provides you with the opportunity to limit encodings not to the installed ones, but
  * ones that you actually support in your application
  *
- * to ensure compatibility across most systems, please use only lowercase and remove any dashes
- * exmaple: write [UTF-8] as [utf8]
+ * this file can be auto-generated using the following artisan command, which will also automatically publish the config file:
+ * # php artisan l4gettext:fetch
  */
 return array(
     "list" => array(
@@ -87,7 +87,8 @@ return array(
         "windows1251",
         "windows1252",
         "cp866",
-        "koi8r",)
+        "koi8r",
+    )
 );
 
 ?>

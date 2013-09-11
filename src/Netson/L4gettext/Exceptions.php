@@ -60,4 +60,13 @@ class NoExecFunctionException extends Exception {}
  */
 class XgettextException extends Exception {}
 
+/**
+ * thrown when fetching the system installed locales/encodings and an item is found with inconsistent formatting
+ */
+class InvalidItemCountException extends Exception {}
+
+/**
+ * thrown if attempting to auto generate locales/encodings files and config files are not writable
+ */
+class ConfigFilesNotWritable extends Exception {}
 ?>

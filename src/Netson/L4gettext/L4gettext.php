@@ -8,7 +8,7 @@ class L4gettext {
 
     /**
      * variable holds the current locale
-     * 
+     *
      * @var string
      */
     protected $locale = null;
@@ -60,9 +60,6 @@ class L4gettext {
     {
         // fetch encodings list
         $encodings = Config::get('l4gettext::encodings.list');
-
-        // uniform syntax
-        $encoding = strtolower(str_replace("-", "", $encoding));
 
         // sanity check
         if (!in_array($encoding, $encodings))
