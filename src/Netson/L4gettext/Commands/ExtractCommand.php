@@ -1,4 +1,5 @@
 <?php
+
 namespace Netson\L4gettext\Commands;
 
 use Illuminate\Console\Command;
@@ -51,7 +52,7 @@ class ExtractCommand extends Command {
          * check if any php files exist in the input folder
          */
         $input_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
-        $templates = File::glob($input_folder . "*.php");
+        $templates    = File::glob($input_folder . "*.php");
 
         // determine number of files in input folder
         $i = count($templates);
@@ -96,7 +97,7 @@ class ExtractCommand extends Command {
         /**
          * fetch path to xgettext binary and set binary
          */
-        $path = ($this->option('binary_path') == "") ? "" : $this->option('binary_path') . DIRECTORY_SEPARATOR;
+        $path                 = ($this->option('binary_path') == "") ? "" : $this->option('binary_path') . DIRECTORY_SEPARATOR;
         $xgettext_arguments[] = $path . $this->option('binary');
 
         /**
@@ -221,8 +222,10 @@ class ExtractCommand extends Command {
         /**
          * set defaults
          */
+        $binary = Config::get("l4gettext::config.xgettext.binary");
+
         $defaults = array(
-            'binary'           => (isset(Config::get("l4gettext::config.xgettext.binary")) ? Config::get("l4gettext::config.xgettext.binary") : "xgettext"),
+            'binary'           => (isset($binary) == true) ? $binary : "xgettext",
             'binary_path'      => Config::get("l4gettext::config.xgettext.binary_path"),
             'language'         => Config::get("l4gettext::config.xgettext.language"),
             'comments'         => Config::get("l4gettext::config.xgettext.comments"),
