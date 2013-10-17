@@ -2,11 +2,7 @@
 namespace Netson\L4gettext\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
-use Config;
-use L4gettext;
-use L4shell;
+use Symfony\Component\Process\ProcessBuilder;
 use File;
 
 class FetchCommand extends Command {
@@ -26,13 +22,26 @@ class FetchCommand extends Command {
     protected $description = 'Fetches all system installed locales and encodings and writes them to the published config files';
 
     /**
+     * object containing the symfony ProcessBuilder
+     *
+     * @var type ProcessBuilder
+     */
+    protected $procBuilder;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct ()
+    public function __construct (ProcessBuilder $procBuilder = null)
     {
         parent::__construct();
+
+        // set process builder
+        if (!is_null($procBuilder))
+            $this->procBuilder = $procBuilder;
+        else
+            $this->procBuilder = new ProcessBuilder;
 
     }
 
@@ -43,6 +52,12 @@ class FetchCommand extends Command {
      */
     public function fire ()
     {
+        /**
+         * sanity check - command not supported on windows
+         */
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+            throw new \Netson\L4gettext\FetchCommandNotSupportedOnWindowsException("The fetch command requires the cli command 'locale' to be available; this is not available on a windows system");
+
         /**
          * check if config has been published
          */
@@ -66,22 +81,33 @@ class FetchCommand extends Command {
          * check if the config files are writable
          */
         if (!File::isWritable($locales_file) || !File::isWritable($encodings_file))
-            throw new \Netson\L4gettext\ConfigFilesNotWritable("the package config files are not writable; please check your file permissions and try again");
+            throw new \Netson\L4gettext\ConfigFilesNotWritableException("the package config files are not writable; please check your file permissions and try again");
         else
             $this->comment("  config files are writable");
 
         /**
          * fetch list of installed locales on current system
          */
-
         // info
         $this->comment("  detecting installed locales and encodings");
 
-        // fetch list using command line
-        $list = L4shell::setCommand('locale %s')->setArguments(array("-a"))->execute();
+        /**
+         * use symfony process builder to build and execute command on cli
+         */
+        $builder = $this->procBuilder;
+        $process = $builder->setPrefix('locale')
+                ->setArguments(array('-a'))
+                ->getProcess();
 
-        // convert string to array
-        $list = explode("\n", $list);
+        // run process
+        $process->run();
+
+        // check for errors
+        if (!$process->isSuccessful())
+            throw new \Netson\L4gettext\CannotFetchInstalledLocalesException("Could not execute the locale command to retrieve installed locales on this system");
+
+        // fetch list using command line and convert to array
+        $list = explode("\n", $process->getOutput());
 
         // set empty list of locales and encodings
         $locales = array();
@@ -90,6 +116,10 @@ class FetchCommand extends Command {
         // loop through list and extract encodings/locales
         foreach ($list as $item)
         {
+            // sanity check - skip empty items
+            if (!$item)
+                continue;
+
             // seperate locale and encoding
             $le = explode(".", $item);
             $count = count($le);
@@ -117,7 +147,6 @@ class FetchCommand extends Command {
          * removes existing locales.php and encodings.php
          * and creates new ones based on the -dist files
          */
-
         $this->comment("  recreating the locales and encodings config files based on current system");
 
         // delete existing files

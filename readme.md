@@ -4,59 +4,19 @@ This package adds gettext functionality to the Laravel 4 framework which allows 
 
 Written by: **Rinck Sonnenberg (Netson)**
 
-
-## How does it work?
-
-This package simply utilizes existing functionality to allow you to use gettext from within the Laravel Blade templates. You can use the following functions in your templates:
-
-* _()   *shorthand for gettext*
-* gettext()
-* dgettext()
-* dcgettext()
-* ngettext()
-* dngettext()
-* dcngettext()
-* _n()  *custom shorthand for ngettext*
-
-If you have any custom functions you would like to use, check out the config.php file for more info! You can easily use these and any custom functions in your blade templates using the following syntax: 
-``` {{ _('translate this') }} ``` or ``` {{ _n("There can be only one", "There can be more than 1", 5) }} ```
-
-The default configuration should be fine for most systems, but you should at least change the **copyright holder**, **package name**, **package version** and **email address** settings.
-
-Aside from those, you are free to change all options according to your wishes. **Make sure you publish the config for this package before changing options**, using the following command:
-
-``` $ php artisan config:publish netson/l4gettext ```
-
-See the comments in the config.php file for detailed documentation on each option.
-
-When you are ready to start translating, use the commands provided by this package to compile your templates and extract the translation strings.
-See the section on Command line options for more information.
-
-
-## Dependencies
-
-Aside from some of the laravel 4 components, there are only logical dependencies:
-* gettext library
-* xgettext (should be installed when installing the gettext library)
-* php-gettext
-* netson/l4shell package (already set in the composer.json file)
-
-**NOTE**: *This package has only been tested on linux (Ubuntu Server 12.04 LTS).*
-
-
 ## Installation
 
 **Installation using composer:**
 
 * add the netson/l4gettext as a required package:
 
-``` $ php composer.phar require "netson/l4gettext:1.0.x" ```
+``` $ php composer.phar require "netson/l4gettext:1.2.*" ```
 
 * update composer:
 
 ``` $ php composer.phar update ```
 
-* add the l4gettext service provider **AND** the L4shell service provider to the laravel app/config/app.php file, in array key 'provider':
+* add the l4gettext service provider to the laravel app/config/app.php file, in array key 'provider':
 
 ```php
 <?php
@@ -66,7 +26,6 @@ return array(
         ..
 	    'providers' => array(
                 ..
-				'Netson\L4shell\L4shellServiceProvider',
                 'Netson\L4gettext\L4gettextServiceProvider',
         ),
         ..
@@ -78,15 +37,15 @@ Before changing any of the configuration options, be sure to publish the package
 
 ``` $ php artisan config:publish netson/l4gettext ```
 
-**Alternatively**, you can use the l4gettext:fetch command to auto generate the config files with only the locales/encodings installed on your system; this will automatically publish the config files if it hasn't been done already:
+**Alternatively**, you can use the l4gettext:fetch command to auto generate the config files with only the locales/encodings installed on your system (only available on Linux/MacOS since this uses the ```locale``` command, which is not available on windows systems); this will automatically publish the config files if it hasn't been done already:
 
 ``` $ php artisan l4gettext:fetch ```
 
-Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext ```
+Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext/config.php ```
 
 ### Important note ###
 
-This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a *"The given command could not be found (exit status 127)"* error message. To fix this, you have two options:
+This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a *"[127] Command not found found"* error message. To fix this, you have two options:
 
 * Add the path to your xgettext binary to the config file (assuming /usr/bin is the location of your xgettext binary):
 
@@ -114,10 +73,49 @@ $ echo 'export PATH=$PATH:/path/to/your/xgettext/folder' >> ~/.bashrc
 
 You are now good to go!
 
+## How does it work?
+
+This package simply utilizes existing functionality to allow you to use gettext from within the Laravel Blade templates. 
+
+**NOTE:** *Symfony contains a .po file reader; this is different from this implementation as this uses the actual gettext library on your system.*
+
+You can use the following functions in your templates:
+
+* _()   *shorthand for gettext*
+* gettext()
+* dgettext()
+* dcgettext()
+* ngettext()
+* dngettext()
+* dcngettext()
+* _n()  *custom shorthand for ngettext*
+
+If you have any custom functions you would like to use, check out the config.php file for more info! You can easily use these and any custom functions in your blade templates using the following syntax: 
+``` {{ _('translate this') }} ``` or ``` {{ _n("There can be only one", "There can be more than 1", 5) }} ```
+
+The default configuration should be fine for most systems, but you should at least change the **copyright holder**, **package name**, **package version** and **email address** settings.
+
+Aside from those, you are free to change all options according to your wishes. **Make sure you publish the config for this package before changing options**, using the following command:
+
+``` $ php artisan config:publish netson/l4gettext ```
+
+See the comments in the config.php file for detailed documentation on each option.
+
+When you are ready to start translating, use the commands provided by this package to compile your templates and extract the translation strings.
+See the section on Command line options for more information.
+
+## Dependencies
+
+Aside from some of the laravel 4 components, there are only logical dependencies:
+* gettext library
+* xgettext (should be installed when installing the gettext library)
+* php-gettext
+
+**NOTE**: *This package has only been tested on linux (Ubuntu Server 12.04 LTS).*
 
 ## Command line options
 
-There are 3 artisan commands for this package:
+There are 4 artisan commands for this package:
 
 * **l4gettext:compile**: compiles all template files to a specific folder (not the default cache folder)
 * **l4gettext:extract**: extracts all the language strings from the compiled templates
@@ -143,6 +141,7 @@ Or, use the following command to generate a new locale:
 
 ``` $ sudo locale-gen nl_NL.UTF-8 ```
 
+For locales available on Windows systems, check out [this link](http://msdn.microsoft.com/en-us/library/39cwe7zf%28v=vs.90%29.aspx). UTF-8 is not supported on Windows systems.
 
 ## Laravel routes
 
@@ -175,6 +174,11 @@ If you would like to integrate this package into your own module/package, here i
 * L4gettext::getEncoding() - *returns (string) encoding, or throws EncodingNotSetException if encoding has not been set*
 * L4gettext::hasEncoding() - *return (bool) true if encoding has been set, false otherwise*
 * L4gettext::getLocaleAndEncoding() - *returns (string) locale.encoding*
+
+## Changelog
+
+#### Version 1.2.0
+* Removed dependency for L4shell - replaced this with the Symfony Process component 
 
 
 ## More information

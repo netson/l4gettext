@@ -4,6 +4,7 @@ namespace Netson\L4gettext;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Filesystem\Filesystem;
+use Symfony\Component\Process\ProcessBuilder;
 
 class L4gettextServiceProvider extends ServiceProvider {
 
@@ -75,7 +76,7 @@ class L4gettextServiceProvider extends ServiceProvider {
 
     public function registerL4gettextBladeCompiler ()
     {
-        // register L4gettext
+        // register bladecompiler
         $this->app['bladecompiler'] = $this->app->share(function($app) {
                     return new Compilers\BladeCompiler(new Filesystem, "");
                 });
@@ -102,7 +103,7 @@ class L4gettextServiceProvider extends ServiceProvider {
     {
         // add extract command to artisan
         $this->app['l4gettext.extract'] = $this->app->share(function($app) {
-                    return new Commands\ExtractCommand();
+                    return new Commands\ExtractCommand(new ProcessBuilder);
                 });
         $this->commands('l4gettext.extract');
 
@@ -122,7 +123,7 @@ class L4gettextServiceProvider extends ServiceProvider {
     {
         // add fetch command to artisan
         $this->app['l4gettext.fetch'] = $this->app->share(function($app) {
-                    return new Commands\FetchCommand();
+                    return new Commands\FetchCommand(new ProcessBuilder);
                 });
         $this->commands('l4gettext.fetch');
 

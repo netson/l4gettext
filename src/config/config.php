@@ -55,6 +55,11 @@ return array(
      */
     'xgettext'         => array(
         /**
+         * In case your xgettext binary/executable is not called 'xgettext', you can change it here.
+         * The default value is [xgettext]
+         */
+        'binary'           => "xgettext",
+        /**
          * In case the path to your xgettext binary is not in your PATH, you can use the following
          * config option to manually set it. This path will then be added to the xgettext command.
          * If you leave this empty, it will be assumed that the xgettext binary is in the PATH of the OS user executing the command
@@ -63,7 +68,7 @@ return array(
          * Please do NOT add a trailing slash
          * The default value is []
          */
-        'binary_path'  => "",
+        'binary_path'      => "",
         /**
          * sets the script language for the xgettext command
          * you should never have to change this option

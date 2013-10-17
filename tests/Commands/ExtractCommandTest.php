@@ -9,7 +9,6 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
     protected function getPackageProviders ()
     {
         return array(
-            'Netson\L4shell\L4shellServiceProvider',
             'Netson\L4gettext\L4gettextServiceProvider',
         );
 
@@ -18,7 +17,6 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
     protected function getPackageAliases ()
     {
         return array(
-            'L4shell'   => 'Netson\L4shell\Facades\Command',
             'L4gettext' => 'Netson\L4gettext\Facades\L4gettext',
         );
 
@@ -28,15 +26,20 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
     {
         File::shouldReceive('glob')->once()->andReturn(array("test.php"));
 
-        L4shell::shouldReceive('setCommand')->once()->andReturn(m::self());
-        L4shell::shouldReceive('setExecutablePath')->once()->andReturn(m::self());
-        L4shell::shouldReceive('setArguments')->once()->andReturn(m::self());
-        L4shell::shouldReceive('sendToDevNull')->once()->andReturn(m::self());
-        L4shell::shouldReceive('setAllowedCharacters')->once()->with(array("*"))->andReturn(m::self());
-        L4shell::shouldReceive('execute')->once()->andReturn("my.hostname.ext");
+        $proc = m::mock("Symfony\Component\Process\Process");
+        $procBuilder = m::mock("Symfony\Component\Process\ProcessBuilder");
 
-        $commandTester = new CommandTester(new ExtractCommand);
+        $proc->shouldReceive('run')->once();
+        $proc->shouldReceive('isSuccessful')->once()->andReturn(true);
+        $proc->shouldReceive('stop')->once();
+
+        $procBuilder->shouldReceive('setArguments')->once()->andReturn(m::self());
+        $procBuilder->shouldReceive('getProcess')->once()->andReturn($proc);
+
+        $commandTester = new CommandTester(new ExtractCommand($procBuilder));
+        $proc->__destruct(); // invoke the stop() call
         $commandTester->execute(array());
+
         $this->assertStringEndsWith("xgettext successfully executed\n", $commandTester->getDisplay());
 
     }

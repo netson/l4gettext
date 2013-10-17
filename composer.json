@@ -5,7 +5,7 @@
     "type": "library",
     "homepage": "https://github.com/netson/l4gettext",
     "keywords": ["laravel", "gettext", "netson", "laravel4"],
-    "version": "1.1.0",
+    "version": "1.2.0",
     "authors": [
         {
             "name": "Rinck Sonnenberg",
@@ -21,8 +21,7 @@
         "illuminate/config": "4.0.x",
         "illuminate/session": "4.0.x",
         "illuminate/filesystem": "4.0.x",
-        "illuminate/view": "4.0.x",
-        "netson/l4shell": "1.2.x"
+        "illuminate/view": "4.0.x"
     },
     "require-dev": {
         "orchestra/testbench": "2.0.*",
