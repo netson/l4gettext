@@ -97,7 +97,7 @@ class ExtractCommand extends Command {
         }
 
         // add info
-        $this->comment("  [$i] files found in input folder [$input_folder]");
+        $this->comment("  [$i] files found in input folder [$input_folder], views folder [$views_folder]");
 
         /**
          * array containging all xgettext parameters
@@ -262,7 +262,7 @@ class ExtractCommand extends Command {
             array('comments', 'c', InputOption::VALUE_REQUIRED, 'The docbloc text to scan for', $defaults['comments']),
             array('force_po', 'f', InputOption::VALUE_REQUIRED, 'Forces the creation of a .pot file regardless of any translation strings found (bool)', $defaults['force_po']),
             array('input_folder', 'i', InputOption::VALUE_REQUIRED, 'The input folder to scan for .php files, relative to the app/ folder', $defaults['input_folder']),
-            array('views_folder', 'v', InputOption::VALUE_REQUIRED, 'The views folder to scan for .php files, relative to the app/ folder', $defaults['views_folder']),
+            array('views_folder', 'w', InputOption::VALUE_REQUIRED, 'The views folder to scan for .php files, relative to the app/ folder', $defaults['views_folder']),
             array('output_folder', 'o', InputOption::VALUE_REQUIRED, 'The output folder to scan for .php files, relative to the app/storage folder', $defaults['output_folder']),
             array('from_code', 'e', InputOption::VALUE_REQUIRED, 'The encoding of the source files', $defaults['from_code']),
             array('copyright_holder', 'a', InputOption::VALUE_REQUIRED, 'The copyright holder/author of the source translations', $defaults['copyright_holder']),
