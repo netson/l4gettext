@@ -19,5 +19,16 @@ if (!function_exists('_n'))
         return ngettext($msg1, $msg2, $n);
     }
 }
+function getGlobPattern($levels)
+{
+    $pattern = "*";
+    for ($i = 1; $i <= $levels; $i++)
+    {
+    if ($pattern != "")
+        $pattern .= ",";
+        $pattern .= str_repeat("*/", $i);
+    }
+    return $pattern;
+}
 
 ?>

@@ -55,13 +55,7 @@ class CompileCommand extends Command {
         /**
          * determine glob pattern based on number of levels
          */
-        $pattern = "*";
-        for ($i = 1; $i <= $compiler_levels; $i++)
-        {
-            if ($pattern != "")
-                $pattern .= ",";
-            $pattern .= str_repeat("*/", $i);
-        }
+        $pattern = getGlobPattern($compiler_levels);
 
         // set final pattern
         $compiler_pattern = $compiler_input . "{" . $pattern . "}*.blade.php";
