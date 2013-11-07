@@ -55,15 +55,16 @@ class ExtractCommand extends Command {
         $views_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('views_folder') . DIRECTORY_SEPARATOR;
         
         $pattern = getGlobPattern($this->option("levels"));
-        $bladeFiles = $views_folder . "{" . $pattern . "}*.blade.php";
         $phpFiles = $views_folder . "{" . $pattern . "}*.php";
         /**
          Merge the php files in compiled folder as well as views folder
-         The array_diff extracts out only the .php files in the views folder
+         The array_filter weeds out the blade templates from view since they are already
+         in the compiled folder
          */
         $templates    = array_merge(File::glob($input_folder . "*.php"),
-            array_diff(File::glob($phpFiles, GLOB_BRACE), File::glob($bladeFiles, GLOB_BRACE)));
-        
+            array_filter(File::glob($phpFiles, GLOB_BRACE), function ($path){
+                return (substr_count($path, 'blade.php') === 0);
+            }));              
         // determine number of files in input folder
         $i = count($templates);
 

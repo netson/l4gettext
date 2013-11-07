@@ -24,7 +24,7 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
 
     public function testExtractCommandSuccessfull ()
     {
-        File::shouldReceive('glob')->times(3)->andReturn(array("test.php"));
+        File::shouldReceive('glob')->times(2)->andReturn(array("test.php"));
 
         $proc = m::mock("Symfony\Component\Process\Process");
         $procBuilder = m::mock("Symfony\Component\Process\ProcessBuilder");
@@ -47,12 +47,12 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
     public function testExtractCommandThrowsExceptionWhenNoFilesFound ()
     {
         $this->setExpectedException('Netson\L4gettext\NoFilesToExtractFromException');
-        File::shouldReceive('glob')->times(3)->andReturn(array());
+        File::shouldReceive('glob')->times(2)->andReturn(array());
 
         $commandTester = new CommandTester(new ExtractCommand);
         $commandTester->execute(array());
 
-    }
+    }    
 
     public function tearDown ()
     {
