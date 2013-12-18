@@ -52,8 +52,19 @@ class ExtractCommand extends Command {
          * check if any php files exist in the input folder
          */
         $input_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
-        $templates    = File::glob($input_folder . "*.php");
-
+        $views_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('views_folder') . DIRECTORY_SEPARATOR;
+        
+        $pattern = getGlobPattern($this->option("levels"));
+        $phpFiles = $views_folder . "{" . $pattern . "}*.php";
+        /**
+         Merge the php files in compiled folder as well as views folder
+         The array_filter weeds out the blade templates from view since they are already
+         in the compiled folder
+         */
+        $templates    = array_merge(File::glob($input_folder . "*.php"),
+            array_filter(File::glob($phpFiles, GLOB_BRACE), function ($path){
+                return (substr_count($path, 'blade.php') === 0);
+            }));              
         // determine number of files in input folder
         $i = count($templates);
 
@@ -61,7 +72,7 @@ class ExtractCommand extends Command {
         if ($i < 1)
         {
             // throw exception
-            throw new \Netson\L4gettext\NoFilesToExtractFromException("The given input folder [$input_folder] does not contain any compiled templates");
+            throw new \Netson\L4gettext\NoFilesToExtractFromException("No templates found");
 
             /* CODE TO BE USED ONCE UNIT TESTING OF INTERACTIVE COMMANDS IS WORKING
               // print error
@@ -87,7 +98,7 @@ class ExtractCommand extends Command {
         }
 
         // add info
-        $this->comment("  [$i] files found in input folder [$input_folder]");
+        $this->comment("  [$i] files found in input folder [$input_folder], views folder [$views_folder]");
 
         /**
          * array containging all xgettext parameters
@@ -231,6 +242,7 @@ class ExtractCommand extends Command {
             'comments'         => Config::get("l4gettext::config.xgettext.comments"),
             'force_po'         => Config::get("l4gettext::config.xgettext.force_po"),
             'input_folder'     => Config::get("l4gettext::config.xgettext.input_folder"),
+            'views_folder'     => Config::get("l4gettext::config.compiler.input_folder"),
             'output_folder'    => Config::get("l4gettext::config.xgettext.output_folder"),
             'from_code'        => Config::get("l4gettext::config.xgettext.from_code"),
             'copyright_holder' => Config::get("l4gettext::config.xgettext.copyright_holder"),
@@ -238,6 +250,7 @@ class ExtractCommand extends Command {
             'package_version'  => Config::get("l4gettext::config.xgettext.package_version"),
             'email_address'    => Config::get("l4gettext::config.xgettext.email_address"),
             'keywords'         => Config::get("l4gettext::config.xgettext.keywords"),
+            'levels'           => Config::get("l4gettext::config.compiler.levels"),
         );
 
         /**
@@ -250,6 +263,7 @@ class ExtractCommand extends Command {
             array('comments', 'c', InputOption::VALUE_REQUIRED, 'The docbloc text to scan for', $defaults['comments']),
             array('force_po', 'f', InputOption::VALUE_REQUIRED, 'Forces the creation of a .pot file regardless of any translation strings found (bool)', $defaults['force_po']),
             array('input_folder', 'i', InputOption::VALUE_REQUIRED, 'The input folder to scan for .php files, relative to the app/ folder', $defaults['input_folder']),
+            array('views_folder', 'w', InputOption::VALUE_REQUIRED, 'The views folder to scan for .php files, relative to the app/ folder', $defaults['views_folder']),
             array('output_folder', 'o', InputOption::VALUE_REQUIRED, 'The output folder to scan for .php files, relative to the app/storage folder', $defaults['output_folder']),
             array('from_code', 'e', InputOption::VALUE_REQUIRED, 'The encoding of the source files', $defaults['from_code']),
             array('copyright_holder', 'a', InputOption::VALUE_REQUIRED, 'The copyright holder/author of the source translations', $defaults['copyright_holder']),
@@ -258,6 +272,7 @@ class ExtractCommand extends Command {
             array('email_address', 'm', InputOption::VALUE_REQUIRED, 'The email address of the author', $defaults['email_address']),
             array('keywords', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The keywords to search for in the source files', $defaults['keywords']),
             array('additional_keywords', 'z', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Keywords in addition to the default keywords'),
+            array('levels', 's', InputOption::VALUE_REQUIRED, 'The number of subdirectories to scan for templates', $defaults['levels']),
         );
 
     }

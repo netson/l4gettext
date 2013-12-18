@@ -107,8 +107,8 @@ See the section on Command line options for more information.
 ## Dependencies
 
 Aside from some of the laravel 4 components, there are only logical dependencies:
-* gettext library
-* xgettext (should be installed when installing the gettext library)
+* gettext library (if not installed, run sudo apt-get install gettext)
+* xgettext (automatically installed when installing the gettext library)
 * php-gettext
 
 **NOTE**: *This package has only been tested on linux (Ubuntu Server 12.04 LTS).*
@@ -117,8 +117,8 @@ Aside from some of the laravel 4 components, there are only logical dependencies
 
 There are 4 artisan commands for this package:
 
-* **l4gettext:compile**: compiles all template files to a specific folder (not the default cache folder)
-* **l4gettext:extract**: extracts all the language strings from the compiled templates
+* **l4gettext:compile**: compiles all blade template files to a specific folder (not the default cache folder)
+* **l4gettext:extract**: extracts all the language strings from the compiled templates and views folder
 * **l4gettext:list**: lists the locales/encodings supported by the application (not the system locales) and prints the default settings
 * **l4gettext:fetch**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS; in case the config files have not been published yet, this command will do so first
 
@@ -128,8 +128,21 @@ These commands use the options as set in the config file, but most can be overwr
 
 ``` $ php artisan l4gettext:extract --help ```
 
-**NOTE**: *When using the default settings, running the l4gettext:extract command without calling the l4gettext:compile command first will issue a warning and you the compile command should be executed first.*
+**NOTE**: *Running the l4gettext:extract command extracts all language messages from compiled templates AND php files in the views folder.*
 
+The extract command creates a .pot file in the output directory if translatable strings are found. Please use the POEdit tool (link at bottom) to open this file.
+Once you enter your translation string(s) in poedit, hit the save button. This will automatically generate the compiled/indexed version of the translation file .mo. 
+Place this compiled .mo file in the appropriate locale folder (ex: app/locale/en_GB/LC_MESSAGES/messages.mo). 
+Note that gettext is extremely finicky when it comes to folder conventions!
+
+**IMPORTANT**:
+*Every time you run the extract command, a brand new .pot file is generated in the storage/l4gettext folder. So, if you already
+have translations entered for a few of the strings, DO NOT run extract again as this will create a fresh .pot file overwriting
+your edits. 
+POEdit makes managing your .pot files very easy. For updating your pot file (in case you made last minute additions/changes to your templates), enter the paths to BOTH
+your "app/views" and "app/storage/gettext" folders in the POEdit "catalog properties"/"source paths" dialog. Then, click on 
+the "Update" button on the (POEdit) toolbar to merge in the updates.*
+ 
 ## Supported locales
 
 Gettext requires that the locales that you want to use are installed on your system. If you attempt to set a locale that is valid, but not installed, an exception will be thrown.
@@ -160,7 +173,7 @@ So even if your system has 10 different locales installed, if your application o
 * Check out the entire list of locales in: **vendor/netson/l4gettext/src/config/locales.php**
 * Check out the entire list of encodings in: **vendor/netson/l4gettext/src/config/encodings.php**
 
-**NOTE**: *If you attempt to set a locale or enconding that is not installed on your system, an exception will be thrown.*
+**NOTE**: *If you attempt to set a locale or encoding that is not installed on your system, an exception will be thrown.*
 
 
 ## Integration
