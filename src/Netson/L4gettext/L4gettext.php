@@ -123,7 +123,11 @@ class L4gettext {
      */
     public function getLocaleAndEncoding ()
     {
-        return $this->getLocale() . "." . $this->getEncoding();
+        // windows compatibility - use only the locale, not the encoding
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN')
+            return $this->getLocale();
+        else
+            return $this->getLocale() . "." . $this->getEncoding();
 
     }
 
