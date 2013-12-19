@@ -104,6 +104,25 @@ See the comments in the config.php file for detailed documentation on each optio
 When you are ready to start translating, use the commands provided by this package to compile your templates and extract the translation strings.
 See the section on Command line options for more information.
 
+
+## Getting started guide
+
+To get started with this module, follow these basic steps:
+1. Follow the installation instructions in this document to install the module
+2. Make sure the installation was successful by seeing if the l4gettext commands are available: ```$ php artisan list ```; a section called l4gettext should appear somewhere in the list of commands
+3. Then, create the config files using the fetch command:  ```$ php artisan l4gettext:fetch ```
+4. To check which locales and encodings are installed on your system, execute the following command: ```$ php artisan l4gettext:list ``` (this command is only supported on Linux/UNIX/Mac based systems and won't work on Windows)
+5. 
+
+- view maken
+- extract command
+- vertalen
+- merge
+- eventueel reboot in verband met gettext bug (link zoeken)
+- via url/routes vertalingen testen
+
+
+
 ## Dependencies
 
 Aside from some of the laravel 4 components, there are only logical dependencies:
@@ -111,7 +130,7 @@ Aside from some of the laravel 4 components, there are only logical dependencies
 * xgettext (automatically installed when installing the gettext library)
 * php-gettext
 
-**NOTE**: *This package has only been tested on linux (Ubuntu Server 12.04 LTS).*
+**NOTE**: *This package has only been thoroughly tested on linux (Ubuntu Server 12.04 LTS).*
 
 ## Command line options
 
@@ -188,7 +207,13 @@ If you would like to integrate this package into your own module/package, here i
 * L4gettext::hasEncoding() - *return (bool) true if encoding has been set, false otherwise*
 * L4gettext::getLocaleAndEncoding() - *returns (string) locale.encoding*
 
+
 ## Changelog
+
+#### Version 1.3.0
+* Added support for Laravel 4.1
+* Improved ExtractCommand: php files in the compiled folder are merged with php files in the view folder prior to extraction of messages - Thanks to [mnshankar](https://github.com/mnshankar)
+* Improved documentation
 
 #### Version 1.2.0
 * Removed dependency for L4shell - replaced this with the Symfony Process component 
