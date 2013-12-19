@@ -92,7 +92,9 @@ To get started with this module and gettext, you can follow these basic steps:
 
 * Next, create your laravel blade templates as you normally would, but now putting all translatable text in the proper gettext function. For example:  ```{{ _("Hello World!") }}``` - see the section *How does it work?* in this document for more information
 
-* When you're done creating your templates, you need to extract all the translatable strings into a .POT file; do so by executing the following command: ```$ php artisan l4gettext:extract```
+* When you're done creating your templates, you need to compile them so that the translatable strings can be extracted. To compile your templates, execute the following command: ```$ php artisan l4gettext:compile```
+ 
+* Next, you need to extract all the translatable strings from the compiled templates and view folders into a .POT file; do so by executing the following command: ```$ php artisan l4gettext:extract```
 
 * Use POEdit to translate the .POT file and use it to create your .mo file. The more recent versions of POEdit will automatically compile the .mo file for you when you save your translations. - *See the important note under* **Command line options** *in case you're updating an existing translation!*
 
