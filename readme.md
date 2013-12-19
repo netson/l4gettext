@@ -33,45 +33,18 @@ return array(
 ?>
 ```
 
-Before changing any of the configuration options, be sure to publish the package config:
-
-``` $ php artisan config:publish netson/l4gettext ```
-
-**Alternatively**, you can use the l4gettext:fetch command to auto generate the config files with only the locales/encodings installed on your system (only available on Linux/MacOS since this uses the ```locale``` command, which is not available on windows systems); this will automatically publish the config files if it hasn't been done already:
+Next, automatically detect which locales and encodings are installed by executing the following command:
 
 ``` $ php artisan l4gettext:fetch ```
 
+*NOTE: only available on Linux/MacOS since this uses the ```locale``` command, which is not available on windows systems. This will automatically publish the config files if they haven't been published already.* 
+
 Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext/config.php ```
 
-### Important note ###
-
-This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a *"[127] Command not found found"* error message. To fix this, you have two options:
-
-* Add the path to your xgettext binary to the config file (assuming /usr/bin is the location of your xgettext binary):
-
-```php
-<?php
-	return array(
-		// ...
-		'xgettext' => array(
-			'binary_path' => "/usr/bin",
-			// ...
-```
-
-**Make sure** you publish the config file first:
+**Alternatively**, if you're on windows or prefer to take the manual route, publish the package config manually and edit the config files:
 
 ``` $ php artisan config:publish netson/l4gettext ```
 
-Then, edit the local config file in ``` app/config/packages/netson/l4gettext/config.php ```
-
-* **OR**, Execute the following command on the CLI (assuming www-data is your webserver user):
-
-```
-$ su www-data
-$ echo 'export PATH=$PATH:/path/to/your/xgettext/folder' >> ~/.bashrc
-```
-
-You are now good to go!
 
 ## How does it work?
 
@@ -107,20 +80,26 @@ See the section on Command line options for more information.
 
 ## Getting started guide
 
-To get started with this module, follow these basic steps:
-1. Follow the installation instructions in this document to install the module
-2. Make sure the installation was successful by seeing if the l4gettext commands are available: ```$ php artisan list ```; a section called l4gettext should appear somewhere in the list of commands
-3. Then, create the config files using the fetch command:  ```$ php artisan l4gettext:fetch ```
-4. To check which locales and encodings are installed on your system, execute the following command: ```$ php artisan l4gettext:list ``` (this command is only supported on Linux/UNIX/Mac based systems and won't work on Windows)
-5. 
+To get started with this module and gettext, you can follow these basic steps:
+* Follow the installation instructions in this document (see above) to install the module
 
-- view maken
-- extract command
-- vertalen
-- merge
-- eventueel reboot in verband met gettext bug (link zoeken)
-- via url/routes vertalingen testen
+* Make sure the installation was successful by seeing if the l4gettext commands are available: ```$ php artisan list ```; a section called l4gettext should appear somewhere in the list of commands
 
+* Then, create (and publish) the config files using the fetch command:  ```$ php artisan l4gettext:fetch ``` (this command is only supported on Linux/UNIX/Mac based systems and won't work on Windows)
+
+* To check which locales and encodings were detected on your system, execute the following command: ```$ php artisan l4gettext:list ```
+
+* Next, create your laravel blade templates as you normally would, but now putting all translatable text in the proper gettext function. For example:  ```{{ _("Hello World!") }}``` - see the section *How does it work?* in this document for more information
+
+* When you're done creating your templates, you need to extract all the translatable strings into a .POT file; do so by executing the following command: ```$ php artisan l4gettext:extract```
+
+* Use POEdit to translate the .POT file and use it to create your .mo file. The more recent versions of POEdit will automatically compile the .mo file for you when you save your translations. - *See the important note under* **Command line options** *in case you're updating an existing translation!*
+
+* Place this compiled .mo (or multiple if you have more than 1 translation) file in the appropriate locale folder (for example: app/locale/en_GB/LC_MESSAGES/messages.mo) - *Note that gettext is extremely finicky when it comes to folder conventions!*
+
+* Now you should be good to go! Try out your new translated site/app by using the built-in routes: yoursite.ext/set-locale/en_GB (assuming you've translated your app to British English). 
+
+If you run into any issues, check the troubleshooting section of this document and if that doesn't help, report any issues on GitHub! :)
 
 
 ## Dependencies
@@ -206,6 +185,43 @@ If you would like to integrate this package into your own module/package, here i
 * L4gettext::getEncoding() - *returns (string) encoding, or throws EncodingNotSetException if encoding has not been set*
 * L4gettext::hasEncoding() - *return (bool) true if encoding has been set, false otherwise*
 * L4gettext::getLocaleAndEncoding() - *returns (string) locale.encoding*
+
+
+## Troubleshooting ##
+
+### Gettext location ###
+
+This package assumes that the xgettext library is in the path of your webserver user. If this is not the case, you may receive a *"[127] Command not found found"* error message. To fix this, you have two options:
+
+* Add the path to your xgettext binary to the config file (assuming /usr/bin is the location of your xgettext binary):
+
+```php
+<?php
+	return array(
+		// ...
+		'xgettext' => array(
+			'binary_path' => "/usr/bin",
+			// ...
+```
+
+**Make sure** you publish the config file first:
+
+``` $ php artisan config:publish netson/l4gettext ```
+
+Then, edit the local config file in ``` app/config/packages/netson/l4gettext/config.php ```
+
+* **OR**, Execute the following command on the CLI (assuming www-data is your webserver user):
+
+```
+$ su www-data
+$ echo 'export PATH=$PATH:/path/to/your/xgettext/folder' >> ~/.bashrc
+```
+
+You are now good to go!
+
+### Gettext caching ###
+
+By design, gettext will cache the translated .mo file upon first usage. This sometimes leads to unwanted behavior where the changes to your .po/.mo file don't show up in your application. The easiest way to fix this is to give your webserver (ie. Apache) a restart. Other workarounds do exist (for example for development environments), but I suggest you Google those if you're interested.
 
 
 ## Changelog
