@@ -1,8 +1,9 @@
 # Gettext for Laravel 4
 
-This package adds gettext functionality to the Laravel 4 framework which allows you to easily translate your application using tools such as PoEdit. Although Laravel 4 comes with a built-in translation engine, I prefer using tools like PoEdit, which takes away the need of maintaining arrays with text. This is my first Laravel experience/package, so if you come across any errors or have suggestions for improvements, let me know.
+This package adds gettext functionality to the Laravel 4 framework which allows you to easily translate your application using tools such as PoEdit. Although Laravel 4 comes with a built-in translation engine, I prefer using tools like PoEdit, which takes away the need of maintaining arrays with text. This is my first Laravel experience/package, so if you come across any errors or have suggestions for improvements, let me know. This package works with Laravel 4.0 and 4.1.
 
 Written by: **Rinck Sonnenberg (Netson)**
+
 
 ## Installation
 
