@@ -11,7 +11,7 @@ Written by: **Rinck Sonnenberg (Netson)**
 
 * add the netson/l4gettext as a required package:
 
-``` $ php composer.phar require "netson/l4gettext:1.2.*" ```
+``` $ php composer.phar require "netson/l4gettext:1.3.*" ```
 
 * update composer:
 
