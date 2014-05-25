@@ -71,6 +71,11 @@ class InvalidItemCountException extends Exception {}
 class ConfigFilesNotWritableException extends Exception {}
 
 /**
+ * thrown if attempting to auto generate locales/encodings files and config files are not writable
+ */
+class ConfigFilesNotPublishedException extends Exception {}
+
+/**
  * thrown if the cli command fetch could not retrieve the installed locales
  */
 class CannotFetchInstalledLocalesException extends Exception {}
@@ -79,4 +84,9 @@ class CannotFetchInstalledLocalesException extends Exception {}
  * thrown if fetch command is run on windows
  */
 class FetchCommandNotSupportedOnWindowsException extends Exception {}
+
+/**
+ * thrown if fetch command is run on windows
+ */
+class InstallCommandNotSupportedOnWindowsException extends Exception {}
 ?>

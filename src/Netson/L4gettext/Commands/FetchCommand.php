@@ -1,4 +1,5 @@
 <?php
+
 namespace Netson\L4gettext\Commands;
 
 use Illuminate\Console\Command;
@@ -62,28 +63,20 @@ class FetchCommand extends Command {
          * check if config has been published
          */
         $config_path = app_path() . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "packages" . DIRECTORY_SEPARATOR . "netson" . DIRECTORY_SEPARATOR . "l4gettext";
-        $locales_file = $config_path . DIRECTORY_SEPARATOR . "locales.php";
-        $encodings_file = $config_path . DIRECTORY_SEPARATOR . "encodings.php";
-        $locales_dist_file = $config_path . DIRECTORY_SEPARATOR . "locales.dist";
+        $locales_file        = $config_path . DIRECTORY_SEPARATOR . "locales.php";
+        $encodings_file      = $config_path . DIRECTORY_SEPARATOR . "encodings.php";
+        $locales_dist_file   = $config_path . DIRECTORY_SEPARATOR . "locales.dist";
         $encodings_dist_file = $config_path . DIRECTORY_SEPARATOR . "encodings.dist";
 
         // check if they exist
-        if (!File::isDirectory($config_path) || !File::isFile($locales_file) || !File::isFile($encodings_file) || !File::isFile($locales_dist_file) || !File::isFile($encodings_dist_file))
-        {
-            // inform user and publish config files
-            $this->comment("  config files have not been published, publishing now");
-            $this->call("config:publish", array("package" => "netson/l4gettext"));
-        }
-        else
-            $this->comment("  config files have already been published");
+        if (!File::isDirectory($config_path) || !File::isFile($locales_file) || !File::isFile($encodings_file))
+            throw new \Netson\L4gettext\ConfigFilesNotPublishedException("  config files have not been published, please run l4gettext:install first");
 
         /**
          * check if the config files are writable
          */
         if (!File::isWritable($locales_file) || !File::isWritable($encodings_file))
             throw new \Netson\L4gettext\ConfigFilesNotWritableException("the package config files are not writable; please check your file permissions and try again");
-        else
-            $this->comment("  config files are writable");
 
         /**
          * fetch list of installed locales on current system
@@ -110,7 +103,7 @@ class FetchCommand extends Command {
         $list = explode("\n", $process->getOutput());
 
         // set empty list of locales and encodings
-        $locales = array();
+        $locales   = array();
         $encodings = array();
 
         // loop through list and extract encodings/locales
@@ -121,7 +114,7 @@ class FetchCommand extends Command {
                 continue;
 
             // seperate locale and encoding
-            $le = explode(".", $item);
+            $le    = explode(".", $item);
             $count = count($le);
 
             // check item for proper length
@@ -138,7 +131,7 @@ class FetchCommand extends Command {
             else
             {
                 // locale and encoding
-                $locales[$le[0]] = $le[0];
+                $locales[$le[0]]   = $le[0];
                 $encodings[$le[1]] = $le[1];
             }
         }
@@ -184,8 +177,6 @@ class FetchCommand extends Command {
          */
         $this->info("  done generating config files");
         $this->info("  - automatically detected [" . count($locales) . "] locales and [" . count($encodings) . "] encodings");
-        $this->info("  - use the l4gettext:list command to check the detected locales/encodings");
-        $this->info("  - be sure to verify your default settings in the config.php file");
 
     }
 

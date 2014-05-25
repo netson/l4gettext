@@ -27,7 +27,7 @@ class FetchCommandTest extends Orchestra\Testbench\TestCase {
         $expected = "en_us.utf8";
 
         File::shouldReceive('isDirectory')->once()->andReturn(true);
-        File::shouldReceive('isFile')->times(4)->andReturn(true);
+        File::shouldReceive('isFile')->times(2)->andReturn(true);
         File::shouldReceive('isWritable')->twice()->andReturn(true);
 
         File::shouldReceive('delete')->twice()->andReturn(true);
@@ -50,7 +50,7 @@ class FetchCommandTest extends Orchestra\Testbench\TestCase {
         $proc->__destruct(); // invoke the stop() call
         $commandTester->execute(array());
 
-        $this->assertStringEndsWith("be sure to verify your default settings in the config.php file\n", $commandTester->getDisplay());
+        $this->assertStringEndsWith("] encodings\n", $commandTester->getDisplay());
 
     }
 
@@ -59,7 +59,7 @@ class FetchCommandTest extends Orchestra\Testbench\TestCase {
         $this->setExpectedException('Netson\L4gettext\ConfigFilesNotWritableException');
 
         File::shouldReceive('isDirectory')->once()->andReturn(true);
-        File::shouldReceive('isFile')->times(4)->andReturn(true);
+        File::shouldReceive('isFile')->times(2)->andReturn(true);
         File::shouldReceive('isWritable')->once()->andReturn(false);
 
         $commandTester = new CommandTester(new FetchCommand);
@@ -74,7 +74,7 @@ class FetchCommandTest extends Orchestra\Testbench\TestCase {
         $expected = "en_us.utf8.error";
 
         File::shouldReceive('isDirectory')->once()->andReturn(true);
-        File::shouldReceive('isFile')->times(4)->andReturn(true);
+        File::shouldReceive('isFile')->times(2)->andReturn(true);
         File::shouldReceive('isWritable')->twice()->andReturn(true);
 
         $proc = m::mock("Symfony\Component\Process\Process");
@@ -100,7 +100,7 @@ class FetchCommandTest extends Orchestra\Testbench\TestCase {
         $this->setExpectedException('Netson\L4gettext\CannotFetchInstalledLocalesException');
 
         File::shouldReceive('isDirectory')->once()->andReturn(true);
-        File::shouldReceive('isFile')->times(4)->andReturn(true);
+        File::shouldReceive('isFile')->times(2)->andReturn(true);
         File::shouldReceive('isWritable')->twice()->andReturn(true);
 
         $proc = m::mock("Symfony\Component\Process\Process");

@@ -11,7 +11,7 @@ Written by: **Rinck Sonnenberg (Netson)**
 
 * add the netson/l4gettext as a required package:
 
-``` $ php composer.phar require "netson/l4gettext:1.3.*" ```
+``` $ php composer.phar require "netson/l4gettext:1.4.*" ```
 
 * update composer:
 
@@ -34,11 +34,13 @@ return array(
 ?>
 ```
 
-Next, automatically detect which locales and encodings are installed by executing the following command:
+Next, automatically detect which locales and encodings are installed and which is your default by executing the following command:
 
-``` $ php artisan l4gettext:fetch ```
+``` $ php artisan l4gettext:install ```
 
-*NOTE: only available on Linux/MacOS since this uses the ```locale``` command, which is not available on windows systems. This will automatically publish the config files if they haven't been published already.* 
+*NOTE: only available on Linux/MacOS since this uses the ```locale``` command, which is not available on windows systems. This will automatically publish the config files if they haven't been published already.*
+
+By default, L4gettext comes with the en_US.utf-8 default, but by using the ```l4gettext:install``` command it will check for your systems' default and use those instead. 
 
 Now, make sure you set the proper **copyright holder**, **package name**, **package version** and **email address** in the file ``` app/config/packages/netson/l4gettext/config.php ```
 
@@ -78,15 +80,10 @@ See the comments in the config.php file for detailed documentation on each optio
 When you are ready to start translating, use the commands provided by this package to compile your templates and extract the translation strings.
 See the section on Command line options for more information.
 
-
 ## Getting started guide
 
 To get started with this module and gettext, you can follow these basic steps:
 * Follow the installation instructions in this document (see above) to install the module
-
-* Make sure the installation was successful by seeing if the l4gettext commands are available: ```$ php artisan list ```; a section called l4gettext should appear somewhere in the list of commands
-
-* Then, create (and publish) the config files using the fetch command:  ```$ php artisan l4gettext:fetch ``` (this command is only supported on Linux/UNIX/Mac based systems and won't work on Windows)
 
 * To check which locales and encodings were detected on your system, execute the following command: ```$ php artisan l4gettext:list ```
 
@@ -105,6 +102,20 @@ To get started with this module and gettext, you can follow these basic steps:
 If you run into any issues, check the troubleshooting section of this document and if that doesn't help, report any issues on GitHub! :)
 
 
+### Want to use translator comments in your source code?
+
+Gettext supports usage of translator comments and so does L4gettext. If you wish to add comments for your translators in your source code, you can do so using the following syntax, assuming that you have set the variable **"xgettext > comments"** in your config file to **TRANSLATORS**:
+
+```php
+{{-- TRANSLATORS: the note --}}{{ _('My string.') }}
+```
+or
+```php 
+{{ /* TRANSLATORS: the note */ _('My string.') }}
+```
+
+*Examples courtesy of [loranger](https://github.com/loranger)*
+
 ## Dependencies
 
 Aside from some of the laravel 4 components, there are only logical dependencies:
@@ -120,8 +131,9 @@ There are 4 artisan commands for this package:
 
 * **l4gettext:compile**: compiles all blade template files to a specific folder (not the default cache folder)
 * **l4gettext:extract**: extracts all the language strings from the compiled templates and views folder
+* **l4gettext:install**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS and sets the defaults in config.php; in case the config files have not been published yet, this command will do so first
 * **l4gettext:list**: lists the locales/encodings supported by the application (not the system locales) and prints the default settings
-* **l4gettext:fetch**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS; in case the config files have not been published yet, this command will do so first
+* **l4gettext:fetch**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS
 
 These commands use the options as set in the config file, but most can be overwritten at runtime by providing the appropriate parameters on the CLI. Check out the help for these commands for more info:
 
@@ -228,6 +240,10 @@ By design, gettext will cache the translated .mo file upon first usage. This som
 
 
 ## Changelog
+
+#### Version 1.4.0
+* Added the install command / updated the fetch command
+* Added documentation regarding translator notes - Thanks to [loranger](https://github.com/loranger)
 
 #### Version 1.3.0
 * Added support for Laravel 4.1

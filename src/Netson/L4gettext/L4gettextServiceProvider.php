@@ -56,6 +56,7 @@ class L4gettextServiceProvider extends ServiceProvider {
         $this->registerExtractCommand();
         $this->registerListCommand();
         $this->registerFetchCommand();
+        $this->registerInstallCommand();
 
     }
 
@@ -126,6 +127,16 @@ class L4gettextServiceProvider extends ServiceProvider {
                     return new Commands\FetchCommand(new ProcessBuilder);
                 });
         $this->commands('l4gettext.fetch');
+
+    }
+
+    public function registerInstallCommand ()
+    {
+        // add fetch command to artisan
+        $this->app['l4gettext.install'] = $this->app->share(function($app) {
+                    return new Commands\InstallCommand(new ProcessBuilder);
+                });
+        $this->commands('l4gettext.install');
 
     }
 
