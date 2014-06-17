@@ -5,7 +5,7 @@
     "type": "library",
     "homepage": "https://github.com/netson/l4gettext",
     "keywords": ["laravel", "gettext", "netson", "laravel4"],
-    "version": "1.4.0",
+    "version": "1.5.0",
     "authors": [
         {
             "name": "Rinck Sonnenberg",
@@ -16,15 +16,15 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": ">=4.0,<4.2",
-        "illuminate/foundation": ">=4.0,<4.2",
-        "illuminate/config": ">=4.0,<4.2",
-        "illuminate/session": ">=4.0,<4.2",
-        "illuminate/filesystem": ">=4.0,<4.2",
-        "illuminate/view": ">=4.0,<4.2"
+        "illuminate/support": ">=4.0,<4.3",
+        "illuminate/foundation": ">=4.0,<4.3",
+        "illuminate/config": ">=4.0,<4.3",
+        "illuminate/session": ">=4.0,<4.3",
+        "illuminate/filesystem": ">=4.0,<4.3",
+        "illuminate/view": ">=4.0,<4.3"
     },
     "require-dev": {
-        "orchestra/testbench": "2.1.*",
+        "orchestra/testbench": ">=2.0,<2.3",
         "mockery/mockery": "dev-master"
     },
     "autoload": {

@@ -1,4 +1,5 @@
 <?php
+
 namespace Netson\L4gettext\Commands;
 
 use Illuminate\Console\Command;
@@ -45,7 +46,7 @@ class CompileCommand extends Command {
         /**
          * compiler settings
          */
-        $compiler_input = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
+        $compiler_input  = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
         $compiler_output = storage_path() . DIRECTORY_SEPARATOR . $this->option('output_folder') . DIRECTORY_SEPARATOR;
         $compiler_levels = $this->option("levels");
 
@@ -57,7 +58,7 @@ class CompileCommand extends Command {
          */
         $pattern = getGlobPattern($compiler_levels);
 
-        // set final pattern
+        // set final patterns
         $compiler_pattern = $compiler_input . "{" . $pattern . "}*.blade.php";
 
         /**
@@ -120,9 +121,9 @@ class CompileCommand extends Command {
          * set defaults
          */
         $defaults = array(
-            'input_folder'  => Config::get("l4gettext::config.compiler.input_folder"),
-            'output_folder' => Config::get("l4gettext::config.compiler.output_folder"),
-            'levels'        => Config::get("l4gettext::config.compiler.levels"),
+            'input_folder'             => Config::get("l4gettext::config.compiler.input_folder"),
+            'output_folder'            => Config::get("l4gettext::config.compiler.output_folder"),
+            'levels'                   => Config::get("l4gettext::config.compiler.levels"),
         );
 
         /**

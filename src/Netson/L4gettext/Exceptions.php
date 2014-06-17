@@ -89,4 +89,14 @@ class FetchCommandNotSupportedOnWindowsException extends Exception {}
  * thrown if fetch command is run on windows
  */
 class InstallCommandNotSupportedOnWindowsException extends Exception {}
+
+/**
+ * thrown if additional input folder is not found
+ */
+class AdditionalInputFolderNotFoundException extends Exception {}
+
+/**
+ * thrown if additional input folder variable is not an array
+ */
+class AdditionalInputFoldersNotArrayException extends Exception {}
 ?>

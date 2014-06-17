@@ -92,6 +92,19 @@ return array(
          */
         'input_folder'     => 'storage/l4gettext',
         /**
+         * provide any additional input folders that you would like to have scanned and processed
+         * the main 'input_folder' directove is commonly used for your (compiled) templates folder containing
+         * the majority of your translation strings, but you can use this config option to set
+         * additional folders, for example one containing your error messages embedded in your class file.
+         *
+         * this directive looks for all .php files and the folder is relative to the applications' root [/]
+         * folder, using laravel's base_path() function. Files in these directories will NOT be compiled
+         * before extracting the the language strings
+         *
+         * the default is an an empty [array()]
+         */
+        'additional_input_folders' => array(),
+        /**
          * output folder where the po(t) file will be stored
          * this path is relative to the /app/storage folder and should not contain leading or trailing slashes
          * the default is [l4gettext]

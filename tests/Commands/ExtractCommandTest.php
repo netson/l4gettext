@@ -52,7 +52,57 @@ class ExtractCommandTest extends Orchestra\Testbench\TestCase {
         $commandTester = new CommandTester(new ExtractCommand);
         $commandTester->execute(array());
 
-    }    
+    }
+
+    public function testExtractCommandThrowsExceptionWhenAdditionalInputFoldersDoNotExist ()
+    {
+        $this->setExpectedException('Netson\L4gettext\AdditionalInputFolderNotFoundException');
+        File::shouldReceive('glob')->times(2)->andReturn(array());
+        File::shouldReceive('isDirectory')->once()->andReturn(false);
+
+        $commandTester = new CommandTester(new ExtractCommand);
+        $commandTester->execute(array(
+            '-d' => array('invalid_folder'), // d = additional_input_folders
+        ));
+
+    }
+
+    public function testExtractCommandThrowsExceptionWhenAdditionalInputFoldersIsString ()
+    {
+        $this->setExpectedException('Netson\L4gettext\AdditionalInputFoldersNotArrayException');
+        File::shouldReceive('glob')->times(2)->andReturn(array());
+
+        $commandTester = new CommandTester(new ExtractCommand);
+        $commandTester->execute(array(
+            '-d' => 'invalid string', // d = additional_input_folders
+        ));
+
+    }
+
+    public function testExtractCommandSuccessfullWithAdditionalInputFolders ()
+    {
+        File::shouldReceive('glob')->times(3)->andReturn(array("test.php"));
+        File::shouldReceive('isDirectory')->once()->andReturn(true);
+
+        $proc = m::mock("Symfony\Component\Process\Process");
+        $procBuilder = m::mock("Symfony\Component\Process\ProcessBuilder");
+
+        $proc->shouldReceive('run')->once();
+        $proc->shouldReceive('isSuccessful')->once()->andReturn(true);
+        $proc->shouldReceive('stop')->once();
+
+        $procBuilder->shouldReceive('setArguments')->once()->andReturn(m::self());
+        $procBuilder->shouldReceive('getProcess')->once()->andReturn($proc);
+
+        $commandTester = new CommandTester(new ExtractCommand($procBuilder));
+        $proc->__destruct(); // invoke the stop() call
+        $commandTester->execute(array(
+            '-d' => array("valid_folder"),
+        ));
+
+        $this->assertStringEndsWith("xgettext successfully executed\n", $commandTester->getDisplay());
+
+    }
 
     public function tearDown ()
     {

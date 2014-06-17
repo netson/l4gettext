@@ -1,6 +1,6 @@
 # Gettext for Laravel 4
 
-This package adds gettext functionality to the Laravel 4 framework which allows you to easily translate your application using tools such as PoEdit. Although Laravel 4 comes with a built-in translation engine, I prefer using tools like PoEdit, which takes away the need of maintaining arrays with text. This is my first Laravel experience/package, so if you come across any errors or have suggestions for improvements, let me know. This package works with Laravel 4.0 and 4.1.
+This package adds gettext functionality to the Laravel 4 framework which allows you to easily translate your application using tools such as PoEdit. Although Laravel 4 comes with a built-in translation engine, I prefer using tools like PoEdit, which takes away the need of maintaining arrays with text. This is my first Laravel experience/package, so if you come across any errors or have suggestions for improvements, let me know. This package works with Laravel 4.0. 4.1 and 4.2.
 
 Written by: **Rinck Sonnenberg (Netson)**
 
@@ -11,7 +11,7 @@ Written by: **Rinck Sonnenberg (Netson)**
 
 * add the netson/l4gettext as a required package:
 
-``` $ php composer.phar require "netson/l4gettext:1.4.*" ```
+``` $ php composer.phar require "netson/l4gettext:1.5.*" ```
 
 * update composer:
 
@@ -130,7 +130,7 @@ Aside from some of the laravel 4 components, there are only logical dependencies
 There are 4 artisan commands for this package:
 
 * **l4gettext:compile**: compiles all blade template files to a specific folder (not the default cache folder)
-* **l4gettext:extract**: extracts all the language strings from the compiled templates and views folder
+* **l4gettext:extract**: extracts all the language strings from the compiled templates and views folder; use the optional additional_input_folders if you want to extract strings from additional folders - see config.php for more info.
 * **l4gettext:install**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS and sets the defaults in config.php; in case the config files have not been published yet, this command will do so first
 * **l4gettext:list**: lists the locales/encodings supported by the application (not the system locales) and prints the default settings
 * **l4gettext:fetch**: auto generates the locales.php and encodings.php config files with the locales and encodings installed on your OS
@@ -240,6 +240,10 @@ By design, gettext will cache the translated .mo file upon first usage. This som
 
 
 ## Changelog
+
+#### Version 1.5.0
+* Added support for Laravel 4.2
+* Added option for additional input folders; see the config file for details - Suggestion by [akaroot](https://github.com/akaroot)
 
 #### Version 1.4.0
 * Added the install command / updated the fetch command

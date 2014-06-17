@@ -51,20 +51,48 @@ class ExtractCommand extends Command {
         /**
          * check if any php files exist in the input folder
          */
-        $input_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
-        $views_folder = app_path() . DIRECTORY_SEPARATOR . $this->option('views_folder') . DIRECTORY_SEPARATOR;
-        
-        $pattern = getGlobPattern($this->option("levels"));
-        $phpFiles = $views_folder . "{" . $pattern . "}*.php";
+        $input_folder       = app_path() . DIRECTORY_SEPARATOR . $this->option('input_folder') . DIRECTORY_SEPARATOR;
+        $views_folder       = app_path() . DIRECTORY_SEPARATOR . $this->option('views_folder') . DIRECTORY_SEPARATOR;
+        $additional_folders = base_path() . DIRECTORY_SEPARATOR;
+
         /**
-         Merge the php files in compiled folder as well as views folder
-         The array_filter weeds out the blade templates from view since they are already
-         in the compiled folder
+         * determine file pattern to search for
          */
-        $templates    = array_merge(File::glob($input_folder . "*.php"),
-            array_filter(File::glob($phpFiles, GLOB_BRACE), function ($path){
-                return (substr_count($path, 'blade.php') === 0);
-            }));              
+        $pattern  = getGlobPattern($this->option("levels"));
+        $phpFiles = $views_folder . "{" . $pattern . "}*.php";
+
+        /**
+         * Merge the php files in compiled folder as well as views folder
+         * The array_filter weeds out the blade templates from view since they are already
+         * in the compiled folder
+         */
+        $templates = array_merge(File::glob($input_folder . "*.php"),
+                array_filter(File::glob($phpFiles, GLOB_BRACE), function ($path) {
+                    return (substr_count($path, 'blade.php') === 0);
+                }));
+
+        /**
+         * sanity check
+         */
+        if (!is_array($this->option("additional_input_folders")))
+            throw new \Netson\L4gettext\AdditionalInputFoldersNotArrayException("The additional_input_folders option should be an array, [" . gettype($this->option("additional_input_folders")) . "] given");
+
+        /**
+         * fetch any additional input folders from the command line or config option
+         */
+        foreach ($this->option("additional_input_folders") as $additional_folder)
+        {
+            // sanity check
+            if (!File::isDirectory($additional_folder))
+                throw new \Netson\L4gettext\AdditionalInputFolderNotFoundException("The additional input folder [$additional_folder] does not exist; please check your configuration");
+
+            // generate the pattern for this folder
+            $compiler_additional_pattern = $additional_folders . $additional_folder . DIRECTORY_SEPARATOR . "{" . $pattern . "}*.php";
+
+            // merge with additional input folders
+            $templates = array_merge($templates, File::glob($compiler_additional_pattern, GLOB_BRACE));
+        }
+
         // determine number of files in input folder
         $i = count($templates);
 
@@ -173,7 +201,9 @@ class ExtractCommand extends Command {
 
         // loop through all keywords
         foreach ($keyword_list as $k)
+        {
             $xgettext_arguments[] = "--keyword=$k"; // using the shorthand xgettext notation for the keywords: -k%k
+        }
         // add info
         $this->comment("  [" . count($keyword_list) . "] keywords found");
 
@@ -183,7 +213,9 @@ class ExtractCommand extends Command {
         if ($this->option('input_folder'))
         {
             foreach ($templates as $t)
+            {
                 $xgettext_arguments[] = $t;
+            }
         }
 
         /**
@@ -236,21 +268,22 @@ class ExtractCommand extends Command {
         $binary = Config::get("l4gettext::config.xgettext.binary");
 
         $defaults = array(
-            'binary'           => (isset($binary) == true) ? $binary : "xgettext",
-            'binary_path'      => Config::get("l4gettext::config.xgettext.binary_path"),
-            'language'         => Config::get("l4gettext::config.xgettext.language"),
-            'comments'         => Config::get("l4gettext::config.xgettext.comments"),
-            'force_po'         => Config::get("l4gettext::config.xgettext.force_po"),
-            'input_folder'     => Config::get("l4gettext::config.xgettext.input_folder"),
-            'views_folder'     => Config::get("l4gettext::config.compiler.input_folder"),
-            'output_folder'    => Config::get("l4gettext::config.xgettext.output_folder"),
-            'from_code'        => Config::get("l4gettext::config.xgettext.from_code"),
-            'copyright_holder' => Config::get("l4gettext::config.xgettext.copyright_holder"),
-            'package_name'     => Config::get("l4gettext::config.xgettext.package_name"),
-            'package_version'  => Config::get("l4gettext::config.xgettext.package_version"),
-            'email_address'    => Config::get("l4gettext::config.xgettext.email_address"),
-            'keywords'         => Config::get("l4gettext::config.xgettext.keywords"),
-            'levels'           => Config::get("l4gettext::config.compiler.levels"),
+            'binary'                   => (isset($binary) == true) ? $binary : "xgettext",
+            'binary_path'              => Config::get("l4gettext::config.xgettext.binary_path"),
+            'language'                 => Config::get("l4gettext::config.xgettext.language"),
+            'comments'                 => Config::get("l4gettext::config.xgettext.comments"),
+            'force_po'                 => Config::get("l4gettext::config.xgettext.force_po"),
+            'input_folder'             => Config::get("l4gettext::config.xgettext.input_folder"),
+            'views_folder'             => Config::get("l4gettext::config.compiler.input_folder"),
+            'additional_input_folders' => Config::get("l4gettext::config.xgettext.additional_input_folders"),
+            'output_folder'            => Config::get("l4gettext::config.xgettext.output_folder"),
+            'from_code'                => Config::get("l4gettext::config.xgettext.from_code"),
+            'copyright_holder'         => Config::get("l4gettext::config.xgettext.copyright_holder"),
+            'package_name'             => Config::get("l4gettext::config.xgettext.package_name"),
+            'package_version'          => Config::get("l4gettext::config.xgettext.package_version"),
+            'email_address'            => Config::get("l4gettext::config.xgettext.email_address"),
+            'keywords'                 => Config::get("l4gettext::config.xgettext.keywords"),
+            'levels'                   => Config::get("l4gettext::config.compiler.levels"),
         );
 
         /**
@@ -264,6 +297,8 @@ class ExtractCommand extends Command {
             array('force_po', 'f', InputOption::VALUE_REQUIRED, 'Forces the creation of a .pot file regardless of any translation strings found (bool)', $defaults['force_po']),
             array('input_folder', 'i', InputOption::VALUE_REQUIRED, 'The input folder to scan for .php files, relative to the app/ folder', $defaults['input_folder']),
             array('views_folder', 'w', InputOption::VALUE_REQUIRED, 'The views folder to scan for .php files, relative to the app/ folder', $defaults['views_folder']),
+            array('additional_input_folders', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Additional input folders to scan for php files, relative to the application root [/] folder',
+                $defaults['additional_input_folders']),
             array('output_folder', 'o', InputOption::VALUE_REQUIRED, 'The output folder to scan for .php files, relative to the app/storage folder', $defaults['output_folder']),
             array('from_code', 'e', InputOption::VALUE_REQUIRED, 'The encoding of the source files', $defaults['from_code']),
             array('copyright_holder', 'a', InputOption::VALUE_REQUIRED, 'The copyright holder/author of the source translations', $defaults['copyright_holder']),
