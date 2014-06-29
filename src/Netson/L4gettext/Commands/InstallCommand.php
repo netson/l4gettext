@@ -106,8 +106,9 @@ class InstallCommand extends Command {
         // in either case, set both the key and the value to avoid duplicates
         if ($count == 1)
         {
-            // just locale
-            $default_locale = $le[0];
+            // just locale, but set an empty encoding to prevent php tripping over an undefined variable
+            $default_locale   = $le[0];
+            $default_encoding = "";
         }
         else
         {
