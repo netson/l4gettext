@@ -206,7 +206,14 @@ class ExtractCommand extends Command {
         }
         // add info
         $this->comment("  [" . count($keyword_list) . "] keywords found");
-
+        
+        /**
+         * add join-existing argument
+         */
+        if ($this->option('join-existing')) { 
+            $this->comment($this->option('join-existing'));
+            $xgettext_arguments[] = "-j";  
+        }
         /**
          * add input folder argument
          */
@@ -308,6 +315,7 @@ class ExtractCommand extends Command {
             array('keywords', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'The keywords to search for in the source files', $defaults['keywords']),
             array('additional_keywords', 'z', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Keywords in addition to the default keywords'),
             array('levels', 's', InputOption::VALUE_REQUIRED, 'The number of subdirectories to scan for templates', $defaults['levels']),
+            array('join-existing', 'j', null, 'Join with existing results'),
         );
 
     }
